@@ -1,0 +1,27 @@
+{
+  "name": "wttr-proxy",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "A lightweight Node.js proxy for wttr.in weather API",
+  "main": "index.js",
+  "scripts": {
+    "start": "node start-services.js",
+    "start:api": "node index.js",
+    "start:mcp": "node mcp-server.js",
+    "dev": "nodemon index.js",
+    "test-mcp": "node test-mcp.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "axios": "^1.6.0",
+    "swagger-ui-express": "^5.0.0",
+    "@modelcontextprotocol/sdk": "^0.4.0",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "keywords": ["weather", "wttr.in", "proxy", "api"],
+  "author": "",
+  "license": "MIT"
+}

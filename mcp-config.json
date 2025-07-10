@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "weather": {
+      "url": "http://localhost:3001/mcp",
+      "description": "Weather data from wttr.in service",
+      "transport": "http",
+      "method": "POST",
+      "headers": {
+        "Content-Type": "application/json"
+      }
+    }
+  }
+}
