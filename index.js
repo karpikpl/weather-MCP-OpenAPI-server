@@ -14,8 +14,34 @@ const PORT = process.env.PORT || 3000;
 // Load OpenAPI specification
 const openApiSpec = JSON.parse(fs.readFileSync(path.join(__dirname, 'weather.json'), 'utf8'));
 
+
 // Middleware
 app.use(express.json());
+
+// Detailed logging middleware for all HTTP requests and responses
+app.use((req, res, next) => {
+  const start = process.hrtime.bigint();
+  const { method, url, headers } = req;
+  res.on('finish', () => {
+    const durationMs = Number(process.hrtime.bigint() - start) / 1e6;
+    const log = {
+      request: {
+        method,
+        url,
+        headers,
+      },
+      response: {
+        statusCode: res.statusCode,
+        headers: res.getHeaders(),
+      },
+      durationMs: durationMs.toFixed(2),
+      timestamp: new Date().toISOString(),
+    };
+    // Log as JSON for easy parsing
+    console.log('[HTTP LOG]', JSON.stringify(log, null, 2));
+  });
+  next();
+});
 
 // Serve OpenAPI documentation
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(openApiSpec));

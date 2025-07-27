@@ -1,13 +1,16 @@
 #!/usr/bin/env node
 
 import { spawn } from 'child_process';
+import { readFileSync } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const versionFile = readFileSync('package.json', 'utf-8');
+const version = JSON.parse(versionFile).version;
 
-console.log('🚀 Starting Weather Proxy Services...\n');
+console.log(`🚀 Starting Weather Proxy Services Version:${version}...\n`);
 
 // Start the main API server
 console.log('📡 Starting HTTP API server...');
