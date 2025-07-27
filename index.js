@@ -20,6 +20,9 @@ app.use(express.json());
 
 // Detailed logging middleware for all HTTP requests and responses
 app.use((req, res, next) => {
+  if (req.path === '/health') {
+    return next();
+  }
   const start = process.hrtime.bigint();
   const { method, url, headers } = req;
   res.on('finish', () => {
@@ -63,23 +66,23 @@ app.get('/:location', async (req, res) => {
 
     // Validate required parameters
     if (!location) {
-      return res.status(400).json({ 
-        error: 'Location parameter is required' 
+      return res.status(400).json({
+        error: 'Location parameter is required'
       });
     }
 
     // Ensure format is j1 as specified in the OpenAPI spec
     if (format !== 'j1') {
-      return res.status(400).json({ 
-        error: 'Format parameter must be "j1"' 
+      return res.status(400).json({
+        error: 'Format parameter must be "j1"'
       });
     }
 
     // Make request to wttr.in
     const wttrUrl = `https://wttr.in/${encodeURIComponent(location)}?format=${format}`;
-    
+
     console.log(`Proxying request to: ${wttrUrl}`);
-    
+
     const response = await axios.get(wttrUrl, {
       timeout: 10000,
       headers: {
@@ -99,19 +102,19 @@ app.get('/:location', async (req, res) => {
     console.error('Error fetching weather data:', error.message);
 
     if (error.response?.status === 404) {
-      return res.status(404).json({ 
-        error: 'Location not found' 
+      return res.status(404).json({
+        error: 'Location not found'
       });
     }
 
     if (error.code === 'ECONNABORTED' || error.code === 'ETIMEDOUT') {
-      return res.status(504).json({ 
-        error: 'Gateway timeout - wttr.in service unavailable' 
+      return res.status(504).json({
+        error: 'Gateway timeout - wttr.in service unavailable'
       });
     }
 
-    res.status(500).json({ 
-      error: 'Internal server error while fetching weather data' 
+    res.status(500).json({
+      error: 'Internal server error while fetching weather data'
     });
   }
 });
@@ -123,7 +126,7 @@ app.get('/', (req, res) => {
 
 // 404 handler
 app.use('*', (req, res) => {
-  res.status(404).json({ 
+  res.status(404).json({
     error: 'Endpoint not found',
     availableEndpoints: [
       'GET /{location}?format=j1 - Get weather data',
@@ -136,8 +139,8 @@ app.use('*', (req, res) => {
 // Error handler
 app.use((error, req, res, next) => {
   console.error('Unhandled error:', error);
-  res.status(500).json({ 
-    error: 'Internal server error' 
+  res.status(500).json({
+    error: 'Internal server error'
   });
 });
 

@@ -13,9 +13,27 @@ class WeatherMCPServer {
   }
 
   async run() {
+
     const app = express();
     app.use(cors());
     app.use(express.json());
+
+    // Logging middleware for all requests (including body), except health checks
+    app.use((req, res, next) => {
+      if (req.path === '/health') {
+        return next();
+      }
+      const { method, url, headers, body } = req;
+      const log = {
+        method,
+        url,
+        headers,
+        body,
+        timestamp: new Date().toISOString(),
+      };
+      console.log('[MCP HTTP LOG]', JSON.stringify(log, null, 2));
+      next();
+    });
 
     const MCP_PORT = process.env.MCP_PORT || 3001;
     

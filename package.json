@@ -1,6 +1,6 @@
 {
   "name": "wttr-proxy",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "description": "A lightweight Node.js proxy for wttr.in weather API",
   "main": "index.js",
