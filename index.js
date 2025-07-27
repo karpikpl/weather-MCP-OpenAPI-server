@@ -20,6 +20,10 @@ app.use(express.json());
 // Serve OpenAPI documentation
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(openApiSpec));
 
+app.get('/openapi.json', (req, res) => {
+  res.json(openApiSpec);
+});
+
 // Health check endpoint
 app.get('/health', (req, res) => {
   res.json({ status: 'healthy', timestamp: new Date().toISOString() });
