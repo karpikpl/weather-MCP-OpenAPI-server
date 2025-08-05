@@ -40,6 +40,18 @@ jobs:
           name: azure-functions-package
           path: artifacts
 
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install Python dependencies
+        run: |
+          cd weather-function
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt --target ./.python_packages/lib/site-packages
+          cd ..
+
       - name: Create zip file
         run: |
           mkdir -p artifacts
@@ -48,11 +60,18 @@ jobs:
           cd ..
           ls -la artifacts/azure-functions-package.zip
 
-      - name: Commit zip file to repository
+      - name: Create Logic App zip file
+        run: |
+          cd logic-app
+          zip -r ../artifacts/logic-app-package.zip . -x "*.git*" "*.vscode*" "local.settings.json"
+          cd ..
+          ls -la artifacts/logic-app-package.zip
+
+      - name: Commit zip files to repository
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add artifacts/azure-functions-package.zip
-          git commit -m "Auto-generated Azure Functions package [skip ci]" || echo "No changes to commit"
+          git add artifacts/azure-functions-package.zip artifacts/logic-app-package.zip
+          git commit -m "Auto-generated Azure Functions and Logic App packages [skip ci]" || echo "No changes to commit"
           git push
 
