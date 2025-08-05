@@ -10,6 +10,7 @@ on:
 
 permissions:
   packages: write
+  contents: write
 
 jobs:
   push_azure_functions_artifact:
