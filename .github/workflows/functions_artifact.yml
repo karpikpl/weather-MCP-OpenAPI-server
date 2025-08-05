@@ -25,16 +25,9 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Create Azure Functions package
-        run: |
-          cd weather-function
-          zip -r ../azure-functions-package.zip . -x "*.git*" "*.vscode*" "__pycache__/*" "*.pyc"
-          cd ..
-        shell: bash
-
       - name: Upload Azure Functions artifact
         uses: actions/upload-artifact@v4
         with:
           name: azure-functions-package
-          path: azure-functions-package.zip
+          path: weather-function
           retention-days: 30
