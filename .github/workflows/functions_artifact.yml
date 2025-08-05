@@ -27,7 +27,21 @@ jobs:
 
       - name: Upload Azure Functions artifact
         uses: actions/upload-artifact@v4
+        id: upload_artifact
         with:
           name: azure-functions-package
           path: weather-function
           retention-days: 30
+    
+      - uses: actions/download-artifact@v4
+        with:
+          artifact-ids: ${{ steps.upload_artifact.outputs.artifact-id }}
+          path: artifacts
+
+      - name: Commit zip file to repository
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add azure-functions-package.zip
+          git commit -m "Auto-generated Azure Functions package [skip ci]" || echo "No changes to commit"
+          git push
