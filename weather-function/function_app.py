@@ -7,8 +7,8 @@ import httpx
 app = func.FunctionApp()
 
 
-@app.queue_trigger(arg_name="msg", queue_name="azure-function-weather-input", connection="STORAGE_CONNECTION")
-@app.queue_output(arg_name="outputQueue", queue_name="azure-function-weather-output", connection="STORAGE_CONNECTION")
+@app.queue_trigger(arg_name="msg", queue_name="azure-function-weather-input", connection="AzureWebJobsStorage")
+@app.queue_output(arg_name="outputQueue", queue_name="azure-function-weather-output", connection="AzureWebJobsStorage")
 
 async def check_weather(msg: func.QueueMessage, outputQueue: func.Out[str]):
     try:
